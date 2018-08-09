@@ -14,12 +14,14 @@ const processLine = (line, tree) => {
   const meta = splitIndentation[2].split(' ', 1)[0]
   const data = splitIndentation[2].substr(meta.length)
 
+
   if (depth === prevDepth) {
     const toAdd = tree.pop()
     console.log('adding to IPLD1:', toAdd.meta)
 
     // The current last item is the parent of this node. Add a link
-    console.log('1adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
+    const parent = tree[tree.length - 1]
+    console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
 
     // Store resulting hash in object where the name is the user defined name and the value is the hash
   }
@@ -34,7 +36,8 @@ const processLine = (line, tree) => {
     console.log('adding to IPLD2:', toAdd.meta)
 
     // The current last item is the parent of this node. Add a link
-    console.log('2adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
+    const parent = tree[tree.length - 1]
+    console.log('2adding a link to', toAdd.meta, 'from', parent.meta)
 
     // Add all missing parents, it could be several levels
     for (let ii = 0; ii < prevDepth - depth; ii++) {
@@ -42,7 +45,8 @@ const processLine = (line, tree) => {
       console.log('adding to IPLD3:', toAddParent.meta)
 
       // The just added parent also links to it's parent
-      console.log('3adding a link to', toAddParent.meta, 'from', tree[tree.length - 1].meta)
+      const parent = tree[tree.length - 1]
+      console.log('3adding a link to', toAddParent.meta, 'from', parent.meta)
 
       // Store resulting hash in object where the name is the user defined name and the value is the hash
     }
