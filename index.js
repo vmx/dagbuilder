@@ -23,21 +23,12 @@ const processLine = (line, tree) => {
   const meta = splitIndentation[2].split(' ', 1)[0]
   const data = splitIndentation[2].substr(meta.length)
 
-
-  if (depth === prevDepth) {
-    popAndLink(tree)
-    // Store resulting hash in object where the name is the user defined name and the value is the hash
-  }
-  // Going deeper
-  else if (depth > prevDepth) {
-    // Push the current line after we processed the previous one
-  }
-  // Going up again, hence write what we had
-  // if (depth < prevDepth)
-  else {
+  // Sibling or children
+  if (depth <= prevDepth) {
     popAndLink(tree)
 
-    // Add all missing parents, it could be several levels
+    // If it's a child (and not a sibling), also Add all missing parents, it
+    // could be several levels
     for (let ii = 0; ii < prevDepth - depth; ii++) {
       popAndLink(tree)
       // Store resulting hash in object where the name is the user defined name and the value is the hash
