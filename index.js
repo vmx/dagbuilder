@@ -61,11 +61,7 @@ const main = async (argv) => {
 
   // There might be still some data in the tree, flush it back to front
   while (tree.length > 1) {
-    const toAdd = tree.pop()
-    console.log('left-over:', toAdd.meta)
-
-    // Leftovers all have a single parent, so we can link to that
-    console.log('4adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
+    popAndLink(tree)
   }
 
   // And finnally add the root node
