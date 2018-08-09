@@ -5,6 +5,15 @@ const fs = require('fs').promises
 // The number of spaces used to indent the children
 const INDENTATION = 2
 
+const popAndLink = (tree) => {
+  const toAdd = tree.pop()
+  console.log('adding to IPLD1:', toAdd.meta)
+
+  // The current last item is the parent of this node. Add a link
+  const parent = tree[tree.length - 1]
+  console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
+}
+
 const processLine = (line, tree) => {
   const prevDepth = tree.length === 0 ? -1 : tree[tree.length - 1].depth
   // Split between indentation and the rest
@@ -16,13 +25,7 @@ const processLine = (line, tree) => {
 
 
   if (depth === prevDepth) {
-    const toAdd = tree.pop()
-    console.log('adding to IPLD1:', toAdd.meta)
-
-    // The current last item is the parent of this node. Add a link
-    const parent = tree[tree.length - 1]
-    console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
-
+    popAndLink(tree)
     // Store resulting hash in object where the name is the user defined name and the value is the hash
   }
   // Going deeper
@@ -32,22 +35,11 @@ const processLine = (line, tree) => {
   // Going up again, hence write what we had
   // if (depth < prevDepth)
   else {
-    const toAdd = tree.pop()
-    console.log('adding to IPLD2:', toAdd.meta)
-
-    // The current last item is the parent of this node. Add a link
-    const parent = tree[tree.length - 1]
-    console.log('2adding a link to', toAdd.meta, 'from', parent.meta)
+    popAndLink(tree)
 
     // Add all missing parents, it could be several levels
     for (let ii = 0; ii < prevDepth - depth; ii++) {
-      const toAddParent = tree.pop()
-      console.log('adding to IPLD3:', toAddParent.meta)
-
-      // The just added parent also links to it's parent
-      const parent = tree[tree.length - 1]
-      console.log('3adding a link to', toAddParent.meta, 'from', parent.meta)
-
+      popAndLink(tree)
       // Store resulting hash in object where the name is the user defined name and the value is the hash
     }
   }
