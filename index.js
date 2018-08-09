@@ -16,10 +16,10 @@ const processLine = (line, tree) => {
 
   if (depth === prevDepth) {
     const toAdd = tree.pop()
-    console.log('adding to IPLD1:', toAdd)
+    console.log('adding to IPLD1:', toAdd.meta)
 
     // The current last item is the parent of this node. Add a link
-    console.log('1adding a link to', toAdd, 'from', tree[tree.length - 1])
+    console.log('1adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
 
     // Store resulting hash in object where the name is the user defined name and the value is the hash
   }
@@ -31,15 +31,21 @@ const processLine = (line, tree) => {
   // if (depth < prevDepth)
   else {
     const toAdd = tree.pop()
-    console.log('adding to IPLD2:', toAdd)
+    console.log('adding to IPLD2:', toAdd.meta)
 
     // The current last item is the parent of this node. Add a link
-    console.log('2adding a link to', toAdd, 'from', tree[tree.length - 1])
+    console.log('2adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
 
-    // Also add the parent
-    const toAddParent = tree.pop()
-    console.log('adding to IPLD3:', toAddParent)
-    // Store resulting hash in object where the name is the user defined name and the value is the hash
+    // Add all missing parents, it could be several levels
+    for (let ii = 0; ii < prevDepth - depth; ii++) {
+      const toAddParent = tree.pop()
+      console.log('adding to IPLD3:', toAddParent.meta)
+
+      // The just added parent also links to it's parent
+      console.log('3adding a link to', toAddParent.meta, 'from', tree[tree.length - 1].meta)
+
+      // Store resulting hash in object where the name is the user defined name and the value is the hash
+    }
   }
 
   tree.push({
@@ -47,7 +53,6 @@ const processLine = (line, tree) => {
     data,
     meta
   })
-
 
   return depth
 }
@@ -71,14 +76,20 @@ const main = async (argv) => {
     }
 
     processLine(line, tree)
-    //console.log(level, line, tree)
   }
 
   // There might be still some data in the tree, flush it back to front
-  while (tree.length > 0) {
+  while (tree.length > 1) {
     const toAdd = tree.pop()
-    console.log('left-over:', toAdd)
+    console.log('left-over:', toAdd.meta)
+
+    // Leftovers all have a single parent, so we can link to that
+    console.log('4adding a link to', toAdd.meta, 'from', tree[tree.length - 1].meta)
   }
+
+  // And finnally add the root node
+  const toAdd = tree.pop()
+  console.log('root node:', toAdd.meta)
 }
 
 
