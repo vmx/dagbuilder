@@ -29,6 +29,16 @@ const popAndLink = (tree) => {
   // The current last item is the parent of this node. Add a link
   const parent = tree[tree.length - 1]
   console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
+
+  // Links can only be added to JSON encoded nodes
+  if (parent.meta.type !== 'json') {
+    throw new Error('Only type:json nodes may have children')
+  }
+
+  // Add the link with the name of the object. This will later be replaced
+  // with its hash
+  parent.data[toAdd.meta.name] = {'/': toAdd.meta.name}
+
   // Store resulting hash in object where the name is the user defined name and the value is the hash
 }
 
