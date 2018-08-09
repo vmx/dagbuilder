@@ -4,5 +4,6 @@
   [type:json,name:childibling] {"yet": "bla"}
     [type:hex,name:deadbeef] deadbeef
     [type:hex,name:face] face
-  [type:json,name:anotherChild] {"yup": "json again"}
+    [type:json,name:anotherChild] {"yup": "json again"}
+      [type:json,name:deepernested] {"even": "deeper"}
   [type:json,name:anotherSibling] {"another": "sibling"}

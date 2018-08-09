@@ -14,7 +14,11 @@ const processLine = (line, prevLevel, tree) => {
 
   if (level === prevLevel) {
     const toAdd = tree.pop()
-    console.log('adding to IPLD:', toAdd)
+    console.log('adding to IPLD1:', toAdd)
+
+    // The current last item is the parent of this node. Add a link
+    console.log('1adding a link to', toAdd, 'from', tree[tree.length - 1])
+
     // Store resulting hash in object where the name is the user defined name and the value is the hash
   }
   // Going deeper
@@ -25,10 +29,14 @@ const processLine = (line, prevLevel, tree) => {
   // if (level < prevLevel)
   else {
     const toAdd = tree.pop()
-    console.log('adding to IPLD:', toAdd)
+    console.log('adding to IPLD2:', toAdd)
+
+    // The current last item is the parent of this node. Add a link
+    console.log('2adding a link to', toAdd, 'from', tree[tree.length - 1])
+
     // Also add the parent
     const toAddParent = tree.pop()
-    console.log('adding to IPLD:', toAddParent)
+    console.log('adding to IPLD3:', toAddParent)
     // Store resulting hash in object where the name is the user defined name and the value is the hash
   }
 
