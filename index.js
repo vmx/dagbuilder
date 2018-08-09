@@ -5,6 +5,23 @@ const fs = require('fs').promises
 // The number of spaces used to indent the children
 const INDENTATION = 2
 
+// Parse meta information into an object
+// The meta information is formatted as:
+// [key1:value1,key2:value2,...]
+const parseMeta = (meta) => {
+  // Remove leading and trailing brackets
+  meta = meta.substr(1, meta.length - 2)
+  // Split into the individual key-value pairs
+  const kvs = meta.split(',')
+  // Create an object out of the key-value pairs
+  const parsed = {}
+  for (const kv of kvs) {
+    const [key, value] = kv.split(':')
+    parsed[key] = value
+  }
+  return parsed
+}
+
 const popAndLink = (tree) => {
   const toAdd = tree.pop()
   console.log('adding to IPLD1:', toAdd.meta)
@@ -21,8 +38,14 @@ const processLine = (line, tree) => {
   const splitIndentation = line.match(/^( *)(.+)/)
   const depth = splitIndentation[1].length / INDENTATION
   // TODO vmx 2018-08-09: do more robust parsing
-  const meta = splitIndentation[2].split(' ', 1)[0]
-  const data = splitIndentation[2].substr(meta.length)
+  let meta = splitIndentation[2].split(' ', 1)[0]
+  let data = splitIndentation[2].substr(meta.length)
+
+  meta = parseMeta(meta)
+
+  if (meta.type === 'json') {
+    data = JSON.parse(data)
+  }
 
   // Write and add links independent of whether it's a singling or a child
   for (let ii = 0; ii <= prevDepth - depth; ii++) {
