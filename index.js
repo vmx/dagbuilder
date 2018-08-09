@@ -47,9 +47,10 @@ const printNode = (node) => {
   console.log(node.raw.meta, printData)
 }
 
+// Gets a node off the tree and resolves links.
+// It returns the processed node
 const popAndLink = (tree) => {
-  const toAdd = tree.pop()
-  printNode(toAdd)
+  const node = tree.pop()
 
   // The current last item is the parent of this node. Add a link
   const parent = tree[tree.length - 1]
@@ -61,9 +62,12 @@ const popAndLink = (tree) => {
 
   // Add the link with the name of the object. This will later be replaced
   // with its hash
-  parent.data[toAdd.meta.name] = {'/': toAdd.meta.name}
+  parent.data[node.meta.name] = {'/': node.meta.name}
+
+  return node
 }
 
+// Returns all the nodes that were successfully processed
 const processLine = (line, tree) => {
   const prevDepth = tree.length === 0 ? -1 : tree[tree.length - 1].depth
   // Split between indentation and the rest
@@ -80,9 +84,12 @@ const processLine = (line, tree) => {
     data = JSON.parse(dataRaw)
   }
 
+  // A list of nodes
+  const result = []
   // Write and add links independent of whether it's a singling or a child
   for (let ii = 0; ii <= prevDepth - depth; ii++) {
-    popAndLink(tree)
+    const node = popAndLink(tree)
+    result.push(node)
   }
 
   tree.push({
@@ -95,7 +102,7 @@ const processLine = (line, tree) => {
     }
   })
 
-  return depth
+  return result
 }
 
 const main = async (argv) => {
@@ -109,6 +116,9 @@ const main = async (argv) => {
   // The last first item of the list is the root node
   const tree = []
 
+  // The final list of nodes with links resolved
+  const result = []
+
   const file = await fs.readFile(filename)
   const contents = file.toString()
   for (const line of contents.split('\n')) {
@@ -116,17 +126,25 @@ const main = async (argv) => {
       continue
     }
 
-    processLine(line, tree)
+    const nodes = processLine(line, tree)
+    if (nodes.length > 0) {
+      result.push(...nodes)
+    }
   }
 
   // There might be still some data in the tree, flush it back to front
   while (tree.length > 1) {
-    popAndLink(tree)
+    const node = popAndLink(tree)
+    result.push(node)
   }
 
-  // And finally print the root node
+  // And finally add the root node
   const root = tree.pop()
-  printNode(root)
+  result.push(root)
+
+  for (const node of result) {
+    printNode(node)
+  }
 }
 
 
