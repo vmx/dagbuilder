@@ -25,11 +25,8 @@ const processLine = (line, tree) => {
 
   // Sibling or children
   if (depth <= prevDepth) {
-    popAndLink(tree)
-
-    // If it's a child (and not a sibling), also Add all missing parents, it
-    // could be several levels
-    for (let ii = 0; ii < prevDepth - depth; ii++) {
+    // Write and add links independent of whether it's a singling or a child
+    for (let ii = 0; ii <= prevDepth - depth; ii++) {
       popAndLink(tree)
       // Store resulting hash in object where the name is the user defined name and the value is the hash
     }
