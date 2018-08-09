@@ -1,0 +1,8 @@
+[type:json,name:root] {"some": "json"}
+  [type:json,name:child] {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
+    [type:raw,name:bezirk] Weser-Ems
+  [type:json,name:childibling] {"yet": "bla"}
+    [type:hex,name:deadbeef] deadbeef
+    [type:hex,name:face] face
+  [type:json,name:anotherChild] {"yup": "json again"}
+  [type:json,name:anotherSibling] {"another": "sibling"}
