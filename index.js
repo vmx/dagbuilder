@@ -12,6 +12,7 @@ const popAndLink = (tree) => {
   // The current last item is the parent of this node. Add a link
   const parent = tree[tree.length - 1]
   console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
+  // Store resulting hash in object where the name is the user defined name and the value is the hash
 }
 
 const processLine = (line, tree) => {
@@ -23,13 +24,9 @@ const processLine = (line, tree) => {
   const meta = splitIndentation[2].split(' ', 1)[0]
   const data = splitIndentation[2].substr(meta.length)
 
-  // Sibling or children
-  if (depth <= prevDepth) {
-    // Write and add links independent of whether it's a singling or a child
-    for (let ii = 0; ii <= prevDepth - depth; ii++) {
-      popAndLink(tree)
-      // Store resulting hash in object where the name is the user defined name and the value is the hash
-    }
+  // Write and add links independent of whether it's a singling or a child
+  for (let ii = 0; ii <= prevDepth - depth; ii++) {
+    popAndLink(tree)
   }
 
   tree.push({
