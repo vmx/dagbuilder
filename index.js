@@ -22,13 +22,37 @@ const parseMeta = (meta) => {
   return parsed
 }
 
+// // Serialize an object into the meta data format:
+// // [key1:value1,key2:value2,...]
+// const serializeMeta = (meta) => {
+//   let serialized = []
+//   for (const [key, value] of Object.entries(meta)) {
+//     serialized.push(key + ':' + value)
+//   }
+//   serialized = serialized.join(',')
+//   return '[' + serialized + ']'
+// }
+
+// Print the meta information as well as the data of a node
+const printNode = (node) => {
+  let printData
+  // If the data was JSON, links might have been added
+  if (node.meta.type === 'json') {
+    printData = JSON.stringify(node.data)
+  }
+  else {
+    printData = node.raw.data
+  }
+
+  console.log(node.raw.meta, printData)
+}
+
 const popAndLink = (tree) => {
   const toAdd = tree.pop()
-  console.log('adding to IPLD1:', toAdd.meta)
+  printNode(toAdd)
 
   // The current last item is the parent of this node. Add a link
   const parent = tree[tree.length - 1]
-  console.log('1adding a link to', toAdd.meta, 'from', parent.meta)
 
   // Links can only be added to JSON encoded nodes
   if (parent.meta.type !== 'json') {
@@ -38,8 +62,6 @@ const popAndLink = (tree) => {
   // Add the link with the name of the object. This will later be replaced
   // with its hash
   parent.data[toAdd.meta.name] = {'/': toAdd.meta.name}
-
-  // Store resulting hash in object where the name is the user defined name and the value is the hash
 }
 
 const processLine = (line, tree) => {
@@ -48,13 +70,14 @@ const processLine = (line, tree) => {
   const splitIndentation = line.match(/^( *)(.+)/)
   const depth = splitIndentation[1].length / INDENTATION
   // TODO vmx 2018-08-09: do more robust parsing
-  let meta = splitIndentation[2].split(' ', 1)[0]
-  let data = splitIndentation[2].substr(meta.length)
+  const metaRaw = splitIndentation[2].split(' ', 1)[0]
+  const dataRaw = splitIndentation[2].substr(metaRaw.length + 1)
 
-  meta = parseMeta(meta)
+  const meta = parseMeta(metaRaw)
 
+  let data
   if (meta.type === 'json') {
-    data = JSON.parse(data)
+    data = JSON.parse(dataRaw)
   }
 
   // Write and add links independent of whether it's a singling or a child
@@ -65,7 +88,11 @@ const processLine = (line, tree) => {
   tree.push({
     depth,
     data,
-    meta
+    meta,
+    raw: {
+      data: dataRaw,
+      meta: metaRaw
+    }
   })
 
   return depth
@@ -97,9 +124,9 @@ const main = async (argv) => {
     popAndLink(tree)
   }
 
-  // And finnally add the root node
-  const toAdd = tree.pop()
-  console.log('root node:', toAdd.meta)
+  // And finally print the root node
+  const root = tree.pop()
+  printNode(root)
 }
 
 
