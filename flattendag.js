@@ -154,8 +154,10 @@ const main = async (argv) => {
   }
 }
 
-main(process.argv).catch((error) => {
-  console.error(error)
-})
+if (require.main === module) {
+  main(process.argv).catch((error) => {
+    console.error(error)
+  })
+}
 
 module.exports = flattenDag
