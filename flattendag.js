@@ -80,8 +80,18 @@ const processLine = (line, tree) => {
   const meta = parseMeta(metaRaw)
 
   let data
-  if (meta.type === 'json') {
-    data = JSON.parse(dataRaw)
+  switch (meta.type) {
+    case 'json':
+      data = JSON.parse(dataRaw)
+      break;
+    case 'hex':
+      data = Buffer.from(dataRaw, 'hex')
+      break;
+    case 'raw':
+      data = Buffer.from(dataRaw)
+      break;
+    default:
+      throw new Error(`Unknown type: ${meta.type}`)
   }
 
   // A list of nodes
