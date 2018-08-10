@@ -105,8 +105,9 @@ const processLine = (line, tree) => {
   return result
 }
 
-const main = async (argv) => {
-  const filename = argv[2]
+// Takes an input string containing a DAG decsribed in a custom format
+// and returns a flat array of parsed nodes which have their links added
+const flattenDag = (contents) => {
   // The tree is represented as a list of object of the shape
   // {
   //   depth: the depth of the tree,
@@ -119,8 +120,6 @@ const main = async (argv) => {
   // The final list of nodes with links resolved
   const result = []
 
-  const file = await fs.readFile(filename)
-  const contents = file.toString()
   for (const line of contents.split('\n')) {
     if (line.length === 0 || line.startsWith('#')) {
       continue
@@ -142,11 +141,18 @@ const main = async (argv) => {
   const root = tree.pop()
   result.push(root)
 
-  for (const node of result) {
+  return result
+}
+
+const main = async (argv) => {
+  const filename = argv[2]
+  const file = await fs.readFile(filename)
+  const contents = file.toString()
+  const flattened = flattenDag(contents)
+  for (const node of flattened) {
     printNode(node)
   }
 }
-
 
 main(process.argv).catch((error) => {
   console.error(error)
