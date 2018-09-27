@@ -9,25 +9,25 @@ const Ipld = require('ipld')
 
 const flattenDag = require('./flattendag')
 
-// This is a global object that stores the mapping between the name of
+// This is a global object that stores the mapping between the id of
 // a node and its CID. It is used to replace the links with the proper
-// names.
-const nameToCidMapping = {}
+// ids.
+const idToCidMapping = {}
 
-const replaceNamesWithCids = (data) => {
+const replaceIdsWithCids = (data) => {
   for (const key in data) {
     if (key === '/') {
-      const cid = nameToCidMapping[data[key]]
+      const cid = idToCidMapping[data[key]]
       if (cid === undefined) {
-        throw new Error(`Cannot resolve link with name "${data[key]}"`)
+        throw new Error(`Cannot resolve link with id "${data[key]}"`)
       }
       data[key] = cid
     } else if (Array.isArray(data[key])) {
       for (const item of data[key]) {
-        replaceNamesWithCids(item)
+        replaceIdsWithCids(item)
       }
     } else if (typeof data[key] === 'object') {
-      replaceNamesWithCids(data[key])
+      replaceIdsWithCids(data[key])
     }
   }
 }
@@ -44,7 +44,7 @@ const cidNode = promisify((ipld, node, callback) => {
       hashAlg = 'sha2-256'
       // Don't manipulate the data of the node directly
       data = JSON.parse(JSON.stringify(node.data))
-      replaceNamesWithCids(data)
+      replaceIdsWithCids(data)
       break
     case 'hex':
     case 'raw':
@@ -55,15 +55,15 @@ const cidNode = promisify((ipld, node, callback) => {
     default:
       callback(new Error(`Unknown type ${node.meta.type}`))
   }
-  const name = node.meta.name
-  if (name in nameToCidMapping) {
-    callback(new Error(`names must be unique, "${name}" was not`))
+  const id = node.meta.id
+  if (id in idToCidMapping) {
+    callback(new Error(`ids must be unique, "${id}" was not`))
   }
   ipld.put(data, {format, hashAlg}, (err, cid) => {
     if (err) {
       callback(err)
     }
-    nameToCidMapping[node.meta.name] = cid.toBaseEncodedString()
+    idToCidMapping[node.meta.id] = cid.toBaseEncodedString()
     callback(null, cid)
   })
 })
@@ -99,7 +99,7 @@ const main = async (argv) => {
 
   for (const node of flattened) {
     const cid = await cidNode(ipld, node)
-    console.log(cid.toBaseEncodedString(), node.meta.name, node.raw.data)
+    console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
   }
 
   // await peer.stop()

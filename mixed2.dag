@@ -1,10 +1,10 @@
-[type:json,name:root] {"some": "json"}
-  [type:json,name:childsibling] {"yet": "bla"}
-    [type:hex,name:deadbeef] deadbeef
-    [type:hex,name:face] face
-    [type:json,name:anotherChild] {"yup": "json again"}
-      [type:json,name:deepernested] {"even": "deeper"}
-  [type:json,name:child] {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
-    [type:raw,name:bezirk] Weser-Ems
-  [type:json,name:anotherSibling] {"another": "sibling"}
-    [type:json,name:bar] {"bar": "baz"}
+[type:json,id:root] {"some": "json"}
+  [type:json,id:childsibling] {"yet": "bla"}
+    [type:hex,id:deadbeef] deadbeef
+    [type:hex,id:face] face
+    [type:json,id:anotherChild] {"yup": "json again"}
+      [type:json,id:deepernested] {"even": "deeper"}
+  [type:json,id:child] {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
+    [type:raw,id:bezirk] Weser-Ems
+  [type:json,id:anotherSibling] {"another": "sibling"}
+    [type:json,id:bar] {"bar": "baz"}
