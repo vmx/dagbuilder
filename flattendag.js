@@ -60,9 +60,14 @@ const popAndLink = (tree) => {
     throw new Error('Only type:json nodes may have children')
   }
 
-  // Add the link with the id of the object. This will later be replaced
-  // with its hash
-  parent.data[node.meta.id] = {'/': node.meta.id}
+  // Add the link with the `name` to the `id` of the object. That `id` will
+  // later be replaced with its hash. If ther's no `name` given, use
+  // the `id`.
+  let name = node.meta.name
+  if (name === undefined) {
+    name = node.meta.id
+  }
+  parent.data[name] = {'/': node.meta.id}
 
   return node
 }
