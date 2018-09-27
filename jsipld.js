@@ -86,12 +86,16 @@ const initIpld = promisify((ipfsRepoPath, callback) => {
 })
 
 const main = async (argv) => {
+  const ipfsPath = process.env.IPFS_PATH
+  if (ipfsPath === undefined) {
+    throw Error('`IPFS_PATH` needs to be defined')
+  }
   const filename = argv[2]
   const file = await fs.readFile(filename)
   const contents = file.toString()
   const flattened = flattenDag(contents)
 
-  const ipld = await initIpld('/tmp/ipfsrepo')
+  const ipld = await initIpld(ipfsPath)
 
   for (const node of flattened) {
     const cid = await cidNode(ipld, node)
