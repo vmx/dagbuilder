@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs').promises
+const uuid = require('uuid/v4')
 
 // The number of spaces used to indent the children
 const INDENTATION = 2
@@ -60,13 +61,13 @@ const popAndLink = (tree) => {
     throw new Error('Only type:json nodes may have children')
   }
 
-  // Add the link with the `name` to the `id` of the object. That `id` will
-  // later be replaced with its hash. If ther's no `name` given, use
-  // the `id`.
-  let name = node.meta.name
-  if (name === undefined) {
-    name = node.meta.id
+  // If no `id` is given assign a unique one
+  if (node.meta.id === undefined) {
+    node.meta.id = uuid()
   }
+  // Add the link with the `name` to the `id` of the object. That `id` will
+  // later be replaced with its hash. If ther's no `name` given, use the `id`.
+  let name = node.meta.name || node.meta.id
   parent.data[name] = {'/': node.meta.id}
 
   return node
@@ -74,6 +75,7 @@ const popAndLink = (tree) => {
 
 // Returns all the nodes that were successfully processed
 const processLine = (line, tree) => {
+  // Start with a depth of -1
   const prevDepth = tree.length === 0 ? -1 : tree[tree.length - 1].depth
   // Split between indentation and the rest
   const splitIndentation = line.match(/^( *)(.+)/)
@@ -101,7 +103,7 @@ const processLine = (line, tree) => {
 
   // A list of nodes
   const result = []
-  // Write and add links independent of whether it's a singling or a child
+  // Write and add links independent of whether it's a sibling or a child
   for (let ii = 0; ii <= prevDepth - depth; ii++) {
     const node = popAndLink(tree)
     result.push(node)
@@ -154,6 +156,9 @@ const flattenDag = (contents) => {
 
   // And finally add the root node
   const root = tree.pop()
+  if (root.meta.id === undefined) {
+    root.meta.id = uuid()
+  }
   result.push(root)
 
   return result

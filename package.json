@@ -6,7 +6,8 @@
   "dependencies": {
     "ipfs-block-service": "^0.14.0",
     "ipfs-repo": "^0.23.1",
-    "ipld": "^0.17.3"
+    "ipld": "^0.17.3",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {},
   "scripts": {
