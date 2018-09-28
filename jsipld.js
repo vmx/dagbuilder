@@ -68,20 +68,15 @@ const cidNode = promisify((ipld, node, callback) => {
   })
 })
 
-const initIpld = promisify((ipfsRepoPath, callback) => {
+const openIpld = promisify((ipfsRepoPath, callback) => {
   const repo = new IpfsRepo(ipfsRepoPath)
-  repo.init({}, (err) => {
+  repo.open((err) => {
     if (err) {
       callback(err)
     }
-    repo.open((err) => {
-      if (err) {
-        callback(err)
-      }
-      const blockService = new IpfsBlockService(repo)
-      const ipld = new Ipld(blockService)
-      callback(null, ipld)
-    })
+    const blockService = new IpfsBlockService(repo)
+    const ipld = new Ipld(blockService)
+    callback(null, ipld)
   })
 })
 
@@ -95,7 +90,7 @@ const main = async (argv) => {
   const contents = file.toString()
   const flattened = flattenDag(contents)
 
-  const ipld = await initIpld(ipfsPath)
+  const ipld = await openIpld(ipfsPath)
 
   for (const node of flattened) {
     const cid = await cidNode(ipld, node)
