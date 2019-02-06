@@ -99,8 +99,6 @@ const main = async (argv) => {
     const cid = await cidNode(ipld, node)
     console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
   }
-
-  // await peer.stop()
 }
 
 main(process.argv).catch((error) => {
