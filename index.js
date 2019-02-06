@@ -2,8 +2,8 @@
 
 const fs = require('fs').promises
 
-// const ipfsAPI = require('ipfs-api')
-const IPFS = require('ipfs')
+const ipfsApi = require('ipfs-api')
+//const IPFS = require('ipfs')
 
 const flattenDag = require('./flattendag')
 
@@ -87,14 +87,17 @@ const main = async (argv) => {
   const contents = file.toString()
   const flattened = flattenDag(contents)
 
-  const peer = await startIpfs()
+  // const peer = await startIpfs()
+  // const peer = ipfsApi()
+  const peer = ipfsApi({port: 5002})
+  // const peer = ipfsApi('/ip4/127.0.0.1/tcp/5002')
 
   for (const node of flattened) {
     const cid = await cidNode(peer, node)
     console.log(cid.toBaseEncodedString(), node.meta.name, node.raw.data)
   }
 
-  await peer.stop()
+  // await peer.stop()
 }
 
 main(process.argv).catch((error) => {
