@@ -9,8 +9,19 @@ const promisify = require('util').promisify
 const IpfsBlockService = require('ipfs-block-service')
 const IpfsRepo = require('ipfs-repo')
 const Ipld = require('ipld')
+const neodoc = require('neodoc')
 
 const flattenDag = require('./flattendag')
+
+const helpText = `
+usage: jsipld.js [--include-id] FILE
+
+arguments:
+    FILE  input file
+
+options:
+    -i, --include-id  Add the id speficied in the DAG file to the node (if the node is JSON)
+`
 
 // This is a global object that stores the mapping between the id of
 // a node and its CID. It is used to replace the links with the proper
@@ -35,8 +46,8 @@ const replaceIdsWithCids = (data) => {
   }
 }
 
-// Get the cid of the node
-const cidNode = promisify((ipld, node, callback) => {
+// Get the cid of the node and store it
+const cidNode = promisify((ipld, node, includeId, callback) => {
   debugger
   let format
   let hashAlg
@@ -48,6 +59,9 @@ const cidNode = promisify((ipld, node, callback) => {
       // Don't manipulate the data of the node directly
       data = JSON.parse(JSON.stringify(node.data))
       replaceIdsWithCids(data)
+      if (includeId) {
+        data.id = node.meta.id
+      }
       break
     // `hex` and `utf8` both lead to buffers which were created by `flattendag`
     case 'hex':
@@ -89,7 +103,10 @@ const main = async (argv) => {
   if (ipfsPath === undefined) {
     throw Error('`IPFS_PATH` needs to be defined')
   }
-  const filename = argv[2]
+
+  const args = neodoc.run(helpText)
+
+  const filename = args.FILE
   const file = await fs.readFile(filename)
   const contents = file.toString()
   const flattened = flattenDag(contents)
@@ -97,7 +114,7 @@ const main = async (argv) => {
   const ipld = await openIpld(ipfsPath)
 
   for (const node of flattened) {
-    const cid = await cidNode(ipld, node)
+    const cid = await cidNode(ipld, node, args['--include-id'])
     console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
   }
 }
