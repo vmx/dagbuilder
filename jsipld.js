@@ -49,8 +49,9 @@ const cidNode = promisify((ipld, node, callback) => {
       data = JSON.parse(JSON.stringify(node.data))
       replaceIdsWithCids(data)
       break
+    // `hex` and `utf8` both lead to buffers which were created by `flattendag`
     case 'hex':
-    case 'raw':
+    case 'utf8':
       format = 'raw'
       hashAlg = 'sha2-256'
       data = node.data

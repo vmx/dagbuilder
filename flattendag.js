@@ -94,7 +94,7 @@ const processLine = (line, tree) => {
     case 'hex':
       data = Buffer.from(dataRaw, 'hex')
       break;
-    case 'raw':
+    case 'utf8':
       data = Buffer.from(dataRaw)
       break;
     default:

@@ -5,6 +5,6 @@
     [type:json,id:anotherChild] {"yup": "json again"}
       [type:json,id:deepernested] {"even": "deeper"}
   [type:json,id:child] {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
-    [type:raw,id:bezirk] Weser-Ems
+    [type:utf8,id:bezirk] Weser-Ems
   [type:json,id:anotherSibling] {"another": "sibling"}
     [type:json,id:bar] {"bar": "baz"}
