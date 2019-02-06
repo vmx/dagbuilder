@@ -1,5 +1,8 @@
 'use strict'
 
+// Loading the data directly into a repository that contains IPLD objects
+// without using IPFS.
+
 const fs = require('fs').promises
 const promisify = require('util').promisify
 
