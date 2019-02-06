@@ -16,6 +16,7 @@
 ```sh
 > git clone https://github.com/vmx/dagbuilder.git
 > cd dagbuilder
+> npm install
 ```
 
 
