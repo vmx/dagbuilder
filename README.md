@@ -50,6 +50,26 @@ zdpuAu31qcTb4of9J2yPSGf4ReJXCPVQCHL1b8MHP5P6W4E3P root {"some": "json"}
 ```
 
 
+### The file format
+
+The general format is
+
+    metadata data
+
+where `metadata` is a list of key-value pairs wrapped in square brackets. The key and value of the key-value pair is separated by a colon, the individual pairs by a comma. Example:
+
+    [type:json,id:root]
+
+Supported keys:
+
+ - `type`: The source format of the data. Possible values:
+   - `json`: The input is JSON, it will be stored as CBOR
+   - `hex`: The input is a hex encoded binary string, it is stored as `raw`
+   - `utf8`: The input is a utf-8 encoded string, it is stored as `raw`
+ - `id`: The identifier that can be used to link to that item. It will also be used as the name for the link if no `name` is given.
+ - `name`: The name of the link. If several children on the same level have the same name, then the links will be stored as an array of links.
+
+
 ## Contribute
 
 Feel free to join in. All welcome. Open an [issue](https://github.com/vmx/dagbuilder/issues)!
@@ -59,5 +79,5 @@ Small note: If editing the README, please conform to the [standard-readme](https
 
 ## License
 
-[MIT](LICENSE) Copyright © 2018 Protocol Labs, Inc.
+[MIT](LICENSE) Copyright © Protocol Labs, Inc.
 
