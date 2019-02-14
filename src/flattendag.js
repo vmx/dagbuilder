@@ -1,10 +1,14 @@
 'use strict'
 
 const fs = require('fs').promises
-const uuid = require('uuid/v4')
 
 // The number of spaces used to indent the children
 const INDENTATION = 2
+
+let idCounter = 0
+const generateId = () => {
+    return `dagbuilder-generated-id-${idCounter++}`
+}
 
 // Parse meta information into an object
 // The meta information is formatted as:
@@ -63,7 +67,7 @@ const popAndLink = (tree) => {
 
   // If no `id` is given assign a unique one
   if (node.meta.id === undefined) {
-    node.meta.id = uuid()
+    node.meta.id = generateId()
   }
   // Add the link with the `name` to the `id` of the object. That `id` will
   // later be replaced with its hash. If ther's no `name` given, use the `id`.
@@ -169,7 +173,7 @@ const flattenDag = (contents) => {
   // And finally add the root node
   const root = tree.pop()
   if (root.meta.id === undefined) {
-    root.meta.id = uuid()
+    root.meta.id = generateId()
   }
   result.push(root)
 
