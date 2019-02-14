@@ -25,7 +25,7 @@
 ### Load data into IPLD
 
 ```console
-> IPFS_PATH=/tmp/dagbuilderrepo node index.js examples/mixed.dag
+> IPFS_PATH=/tmp/dagbuilderrepo npx . examples/mixed.dag
 zb2rhd4xj9YjrdNbjQiE1cp7Uhy5i9jm6C9Uej3Bckb1S37ez deadbeef deadbeef
 zb2rhbGwE5yJZjN1THD9cy96KGocL6dSRkvLAtWiRCqy5H5tb face face
 zdpuAoyzi72dfx9bJA8DhDFiajZd6yAYXtnkwKLYVnmJBu3aw deepernested {"even": "deeper"}
