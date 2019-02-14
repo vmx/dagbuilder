@@ -1,0 +1,6 @@
+[type:json,id:root] {"some": "json"}
+  [type:json,name:child,id:child1] {"yet": "bla"}
+    [type:json,name:child,id:child2] {"yup": "json again"}
+      [type:json,name:child,id:child3] {"even": "deeper"}
+        [type:json,name:child,id:child4] {"another": "sibling"}
+          [type:json,name:child,id:child5] {"bar": "baz"}

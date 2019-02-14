@@ -36,7 +36,7 @@ peer identity: QmWZaQmoqnVzsWtpM5uQewneFY7GtghffZATMELs7xDS1u
 Now load the data into it:
 
 ```console
-> IPFS_PATH=/tmp/dagbuilderrepo node jsipld.js mixed2.dag
+> IPFS_PATH=/tmp/dagbuilderrepo node jsipld.js examples/mixed.dag
 zb2rhd4xj9YjrdNbjQiE1cp7Uhy5i9jm6C9Uej3Bckb1S37ez deadbeef deadbeef
 zb2rhbGwE5yJZjN1THD9cy96KGocL6dSRkvLAtWiRCqy5H5tb face face
 zdpuAoyzi72dfx9bJA8DhDFiajZd6yAYXtnkwKLYVnmJBu3aw deepernested {"even": "deeper"}
