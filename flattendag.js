@@ -67,8 +67,20 @@ const popAndLink = (tree) => {
   }
   // Add the link with the `name` to the `id` of the object. That `id` will
   // later be replaced with its hash. If ther's no `name` given, use the `id`.
-  let name = node.meta.name || node.meta.id
-  parent.data[name] = {'/': node.meta.id}
+  const name = node.meta.name || node.meta.id
+  const link = {'/': node.meta.id}
+
+  // If there is already a link with that name, then store all with the same
+  // name as an array
+  if (name in parent.data) {
+    // The link isn't an array of links yet
+    if (!Array.isArray(parent.data[name])) {
+      parent.data[name] = [parent.data[name]]
+    }
+    parent.data[name].push(link)
+  } else {
+    parent.data[name] = link
+  }
 
   return node
 }
