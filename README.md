@@ -24,17 +24,6 @@
 
 ### Load data into IPLD
 
-First create an empty IPFS repo:
-
-```console
-> IPFS_PATH=/tmp/dagbuilderrepo jsipfs init --empty-repo
-initializing ipfs node at /tmp/dagbuilderrepo
-generating 2048-bit RSA keypair...done
-peer identity: QmWZaQmoqnVzsWtpM5uQewneFY7GtghffZATMELs7xDS1u
-```
-
-Now load the data into it:
-
 ```console
 > IPFS_PATH=/tmp/dagbuilderrepo node index.js examples/mixed.dag
 zb2rhd4xj9YjrdNbjQiE1cp7Uhy5i9jm6C9Uej3Bckb1S37ez deadbeef deadbeef

@@ -87,13 +87,21 @@ const cidNode = promisify((ipld, node, includeId, callback) => {
 
 const openIpld = promisify((ipfsRepoPath, callback) => {
   const repo = new IpfsRepo(ipfsRepoPath)
-  repo.open((err) => {
+  // Initialize the repository, it won't do any harm if it was already
+  // initialized
+  repo.init({}, (err) => {
     if (err) {
       callback(err)
     }
-    const blockService = new IpfsBlockService(repo)
-    const ipld = new Ipld(blockService)
-    callback(null, ipld)
+
+    repo.open((err) => {
+      if (err) {
+        callback(err)
+      }
+      const blockService = new IpfsBlockService(repo)
+      const ipld = new Ipld(blockService)
+      callback(null, ipld)
+    })
   })
 })
 
