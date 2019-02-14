@@ -48,7 +48,6 @@ const replaceIdsWithCids = (data) => {
 
 // Get the cid of the node and store it
 const cidNode = promisify((ipld, node, includeId, callback) => {
-  debugger
   let format
   let hashAlg
   let data
@@ -117,6 +116,8 @@ const main = async (argv) => {
     const cid = await cidNode(ipld, node, args['--include-id'])
     console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
   }
+  // Close the repo so that there's no left-over lock file
+  ipld.bs._repo.close(() => {})
 }
 
 main(process.argv).catch((error) => {
