@@ -2,6 +2,8 @@
 
 const fs = require('fs').promises
 
+const deepmerge = require('deepmerge')
+
 // The number of spaces used to indent the children
 const INDENTATION = 2
 
@@ -52,6 +54,36 @@ const printNode = (node) => {
   console.log(node.raw.meta, printData)
 }
 
+// Create an object out of the `name` if it is a path
+const createObjectFromName = (name, link) => {
+  const result = {}
+  // Create a temporary object to make the manipulation easier
+  let tmpObject = result
+
+  const processedName = name.split('/')
+  for (let ii = 0; ii < processedName.length; ii++) {
+    const segment = processedName[ii]
+    let next
+    if (processedName[ii + 1] === '[]') {
+      next = []
+      ii++
+    } else if (ii + 1 === processedName.length) {
+      next = link
+    } else {
+      next = {}
+    }
+    if (Array.isArray(tmpObject)) {
+      tmpObject.push({ [segment]: next })
+    } else { // It's an object
+      tmpObject[segment] = next
+    }
+    // Go deeper
+    tmpObject = tmpObject[segment]
+  }
+
+  return result
+}
+
 // Gets a node off the tree and resolves links.
 // It returns the processed node
 const popAndLink = (tree) => {
@@ -74,17 +106,9 @@ const popAndLink = (tree) => {
   const name = node.meta.name || node.meta.id
   const link = {'/': node.meta.id}
 
-  // If there is already a link with that name, then store all with the same
-  // name as an array
-  if (name in parent.data) {
-    // The link isn't an array of links yet
-    if (!Array.isArray(parent.data[name])) {
-      parent.data[name] = [parent.data[name]]
-    }
-    parent.data[name].push(link)
-  } else {
-    parent.data[name] = link
-  }
+  let objectName = createObjectFromName(name, link)
+  parent.data = deepmerge(parent.data, objectName)
+  console.log('vmx: parent.data:', JSON.stringify(parent.data))
 
   return node
 }

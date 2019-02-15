@@ -4,6 +4,7 @@
   "description": "Load a DAG described in a file into IPFS/IPLD",
   "main": "src/index.js",
   "dependencies": {
+    "deepmerge": "^3.1.0",
     "ipfs-block-service": "^0.14.0",
     "ipfs-repo": "^0.23.1",
     "ipld": "^0.17.3",
