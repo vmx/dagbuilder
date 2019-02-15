@@ -55,8 +55,8 @@ Supported keys:
    - `json`: The input is JSON, it will be stored as CBOR
    - `hex`: The input is a hex encoded binary string, it is stored as `raw`
    - `utf8`: The input is a utf-8 encoded string, it is stored as `raw`
- - `id`: The identifier that can be used to link to that item. It will also be used as the name for the link if no `name` is given.
- - `name`: The name of the link. If several children on the same level have the same name, then the links will be stored as an array of links.
+ - `id`: The identifier that can be used to link to that item. It will also be used as the name for the link if no `linkname` is given.
+ - `linkname`: The name of the link. If several children on the same level have the same name, then the links will be stored as an array of links.
 
 
 ## Contribute

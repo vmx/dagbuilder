@@ -55,7 +55,7 @@ const printNode = (node) => {
 }
 
 // Create an object out of the `name` if it is a path
-const createObjectFromName = (name, link) => {
+const createObjectFromLinkname = (name, link) => {
   const result = {}
   // Create a temporary object to make the manipulation easier
   let tmpObject = result
@@ -101,13 +101,14 @@ const popAndLink = (tree) => {
   if (node.meta.id === undefined) {
     node.meta.id = generateId()
   }
-  // Add the link with the `name` to the `id` of the object. That `id` will
-  // later be replaced with its hash. If ther's no `name` given, use the `id`.
-  const name = node.meta.name || node.meta.id
+  // Add the link with the `linkname` to the `id` of the object. That `id` will
+  // later be replaced with its hash. If ther's no `linkname` given, use the
+  // `id`.
+  const linkname = node.meta.linkname || node.meta.id
   const link = {'/': node.meta.id}
 
-  let objectName = createObjectFromName(name, link)
-  parent.data = deepmerge(parent.data, objectName)
+  let objectLink = createObjectFromLinkname(linkname, link)
+  parent.data = deepmerge(parent.data, objectLink)
   console.log('vmx: parent.data:', JSON.stringify(parent.data))
 
   return node
