@@ -109,7 +109,6 @@ const popAndLink = (tree) => {
 
   let objectLink = createObjectFromLinkname(linkname, link)
   parent.data = deepmerge(parent.data, objectLink)
-  console.log('vmx: parent.data:', JSON.stringify(parent.data))
 
   return node
 }
