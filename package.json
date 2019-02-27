@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "description": "Load a DAG described in a file into IPFS/IPLD",
   "main": "src/index.js",
+  "bin": "src/bin.js",
   "dependencies": {
     "deepmerge": "^3.1.0",
     "ipfs-block-service": "^0.14.0",
     "ipfs-repo": "^0.23.1",
     "ipld": "^0.17.3",
+    "merge-options": "^1.0.1",
     "neodoc": "^2.0.2",
     "uuid": "^3.3.2"
   },

@@ -38,8 +38,31 @@ zdpuArBbc79tLJ1dpXWkusQC7ZCWePYSa2rfaL5g98FNn93AL anotherSibling {"another": "si
 zdpuAu31qcTb4of9J2yPSGf4ReJXCPVQCHL1b8MHP5P6W4E3P root {"some": "json"}
 ```
 
+### Using it as a module
 
-### The file format
+```javascript
+const dagbuilder = require('dagbuilder')
+
+const addData = async () => {
+  const data = dagbuilder('/tmp/myipfsrepo', 'examples/mixed.dag')
+  for await (const {cid, node} of data) {
+    console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
+  }
+}
+```
+
+
+## API
+
+### constructor
+
+ - `ipfsPath` (`string`, required): the path to the IPFS repository where the data is stored.
+ - `inputFile` (`string`, required): the input file that describes the DAG. See [The file format](#the-file-format) for more information.
+ - `options` (`Object`, default: `{}`):
+   - `includeId` (`boolean`, default: `false`): whether the IDs of the nodes should be included when they are encoded or not.
+
+
+## The file format
 
 The general format is
 

@@ -9,19 +9,9 @@ const promisify = require('util').promisify
 const IpfsBlockService = require('ipfs-block-service')
 const IpfsRepo = require('ipfs-repo')
 const Ipld = require('ipld')
-const neodoc = require('neodoc')
+const mergeOptions = require('merge-options')
 
 const flattenDag = require('./flattendag')
-
-const helpText = `
-usage: jsipld.js [--include-id] FILE
-
-arguments:
-    FILE  input file
-
-options:
-    -i, --include-id  Add the id speficied in the DAG file to the node (if the node is JSON)
-`
 
 // This is a global object that stores the mapping between the id of
 // a node and its CID. It is used to replace the links with the proper
@@ -105,30 +95,29 @@ const openIpld = promisify((ipfsRepoPath, callback) => {
   })
 })
 
-const main = async (argv) => {
-  const ipfsPath = process.env.IPFS_PATH
-  if (ipfsPath === undefined) {
-    throw Error('`IPFS_PATH` needs to be defined')
+
+// A generator that returns the original nodea as well as the resulting CID
+const dagbuilder = async function * (ipfsPath, inputFile, userOptions) {
+  const defaultOptions = {
+    includeId: false
   }
+  const options = mergeOptions(defaultOptions, userOptions)
 
-  const args = neodoc.run(helpText)
-
-  const filename = args.FILE
-  const file = await fs.readFile(filename)
+  const file = await fs.readFile(inputFile)
   const contents = file.toString()
   const flattened = flattenDag(contents)
 
   const ipld = await openIpld(ipfsPath)
 
   for (const node of flattened) {
-    const cid = await cidNode(ipld, node, args['--include-id'])
-    console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
+    const cid = await cidNode(ipld, node, options.includeId)
+    yield {
+      cid,
+      node
+    }
   }
   // Close the repo so that there's no left-over lock file
   ipld.bs._repo.close(() => {})
 }
 
-main(process.argv).catch((error) => {
-  console.error(error)
-})
-
+module.exports = dagbuilder
