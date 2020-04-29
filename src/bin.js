@@ -27,7 +27,7 @@ const main = async (argv) => {
   )
 
   for await (const {cid, node} of data) {
-    console.log(cid.toBaseEncodedString(), node.meta.id, node.raw.data)
+    console.log(cid.toString(), node.meta.id, node.raw.data)
   }
 }
 
