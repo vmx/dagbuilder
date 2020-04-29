@@ -4,12 +4,12 @@
 // without using IPFS.
 
 const fs = require('fs').promises
-const promisify = require('util').promisify
 
 const IpfsBlockService = require('ipfs-block-service')
 const IpfsRepo = require('ipfs-repo')
 const Ipld = require('ipld')
 const mergeOptions = require('merge-options')
+const multicodec = require('multicodec')
 
 const flattenDag = require('./flattendag')
 
@@ -37,14 +37,14 @@ const replaceIdsWithCids = (data) => {
 }
 
 // Get the cid of the node and store it
-const cidNode = promisify((ipld, node, includeId, callback) => {
+const cidNode = async (ipld, node, includeId) => {
   let format
   let hashAlg
   let data
   switch (node.meta.type) {
     case 'json':
-      format = 'dag-cbor'
-      hashAlg = 'sha2-256'
+      format = multicodec.DAG_CBOR
+      hashAlg = multicodec.SHA2_256
       // Don't manipulate the data of the node directly
       data = JSON.parse(JSON.stringify(node.data))
       replaceIdsWithCids(data)
@@ -55,45 +55,30 @@ const cidNode = promisify((ipld, node, includeId, callback) => {
     // `hex` and `utf8` both lead to buffers which were created by `flattendag`
     case 'hex':
     case 'utf8':
-      format = 'raw'
-      hashAlg = 'sha2-256'
+      format = multicodec.RAW
+      hashAlg = multicodec.SHA2_256
       data = node.data
       break
     default:
-      callback(new Error(`Unknown type ${node.meta.type}`))
+      throw new Error(`Unknown type ${node.meta.type}`)
   }
   const id = node.meta.id
   if (id in idToCidMapping) {
-    callback(new Error(`ids must be unique, "${id}" was not`))
+    throw new Error(`ids must be unique, "${id}" was not`)
   }
-  ipld.put(data, {format, hashAlg}, (err, cid) => {
-    if (err) {
-      callback(err)
-    }
-    idToCidMapping[node.meta.id] = cid.toBaseEncodedString()
-    callback(null, cid)
-  })
-})
+  const cid = await ipld.put(data, format, {hashAlg})
+  idToCidMapping[node.meta.id] = cid.toBaseEncodedString()
+  return cid
+}
 
-const openIpld = promisify((ipfsRepoPath, callback) => {
+const openIpld = async (ipfsRepoPath) => {
   const repo = new IpfsRepo(ipfsRepoPath)
-  // Initialize the repository, it won't do any harm if it was already
-  // initialized
-  repo.init({}, (err) => {
-    if (err) {
-      callback(err)
-    }
-
-    repo.open((err) => {
-      if (err) {
-        callback(err)
-      }
-      const blockService = new IpfsBlockService(repo)
-      const ipld = new Ipld(blockService)
-      callback(null, ipld)
-    })
-  })
-})
+  await repo.init({})
+  await repo.open()
+  const blockService = new IpfsBlockService(repo)
+  const ipld = new Ipld({ blockService })
+  return ipld
+}
 
 
 // A generator that returns the original nodea as well as the resulting CID
@@ -117,7 +102,7 @@ const dagbuilder = async function * (ipfsPath, inputFile, userOptions) {
     }
   }
   // Close the repo so that there's no left-over lock file
-  ipld.bs._repo.close(() => {})
+  await ipld.bs._repo.close()
 }
 
 module.exports = dagbuilder

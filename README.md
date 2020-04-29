@@ -26,16 +26,16 @@
 
 ```console
 > IPFS_PATH=/tmp/dagbuilderrepo npx . examples/mixed.dag
-zb2rhd4xj9YjrdNbjQiE1cp7Uhy5i9jm6C9Uej3Bckb1S37ez deadbeef deadbeef
-zb2rhbGwE5yJZjN1THD9cy96KGocL6dSRkvLAtWiRCqy5H5tb face face
-zdpuAoyzi72dfx9bJA8DhDFiajZd6yAYXtnkwKLYVnmJBu3aw deepernested {"even": "deeper"}
-zdpuAnChLrjjJYXqV4QGG1PAmxnTvqhx2TDzGnFBcjVRpqFRY anotherChild {"yup": "json again"}
-zdpuAxTFoqxnr4GnjyHaGd8icCoXAtquLy4K4QwaZaeWaR24p childsibling {"yet": "bla"}
-zb2rhaDj14xPxcixuRa4GatsXUVRXhPufHqhPWUFmKp3xftVx bezirk Weser-Ems
-zdpuAt2PqbqxF4LF3vfE8ahqmAN2qfUua4fvt2kZSw6KEcNeG child {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
-zdpuAueqWE5DEFbGvBG5mzofARZ7VAzxkzMuyuaqnEd1a4Zii bar {"bar": "baz"}
-zdpuArBbc79tLJ1dpXWkusQC7ZCWePYSa2rfaL5g98FNn93AL anotherSibling {"another": "sibling"}
-zdpuAu31qcTb4of9J2yPSGf4ReJXCPVQCHL1b8MHP5P6W4E3P root {"some": "json"}
+bafkreic7pdbte5heh6u54vszezob3el6exadoiw4wc4ne7ny2x7kvajzkm deadbeef deadbeef
+bafkreice2kut2bglwgwpkqdnzrvidjbz2lhrpj47ekqz2cknzn4nzbjpqa face face
+bafyreibu5ila472majbuek4cecho7mvohas5u5zzcgob2lonavmvsxzn3a deepernested {"even": "deeper"}
+bafyreiahvm55w3wpah5rrnrprqfer5tm7mgm4ragaamcp4ehzaiua2kswu anotherChild {"yup": "json again"}
+bafyreih7qralx7dtjpsuxfstgzixgearssnx4bhtydaxwfzy4tdiuaktpu childsibling {"yet": "bla"}
+bafkreibverunmawfrbz5iea2aw4ym46p4h4pplnulnjk3mtfo4wttkxpdm bezirk Weser-Ems
+bafyreicliqzi3xwsgnyk75dxx6yll4rmxhbcqohqncqi7bqwlt6a6ohb3u child {"more": "json", "directDeadBeef": {"/": "deadbeef"}}
+bafyreieje7b3e2fpqapqv5xegbw42mmunktnxwwbu7bfkrlnsfkte3hf7m bar {"bar": "baz"}
+bafyreignbzx2dy6th6lybhxwqyouxg2anftqyk6xwlpjiqhp6vguqbfthy anotherSibling {"another": "sibling"}
+bafyreigds2mprmzw7doiq2pwfamzuc4kvxy2qg36bg7gin4tgdkuvcce4i root {"some": "json"}
 ```
 
 ### Using it as a module
